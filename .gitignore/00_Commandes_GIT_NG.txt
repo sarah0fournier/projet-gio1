@@ -1,0 +1,116 @@
+##SE CONNECTER A UN GITHUB ET METTRE A JOUR LES FICHIERS
+##------------------------------------------------------
+
+# Aller dans le dossier ou sera GIT
+nonog@LAPTOP-17HB5T3J MINGW64 ~
+$ cd C:/Users/nonog/Documents/Lecon_HES-SO/S2/GIO1/00_Projet/01_Code_GIT
+$ cd C:/Users/nonog/Documents/Lecon_HES-SO/S2/GIO1/00_Projet/01_Code_GIT/projet-gio1 
+
+# Lier le GITHUB dasn le dossier dans lequel on est allé précédemment
+nonog@LAPTOP-17HB5T3J MINGW64 ~/Documents/Lecon_HES-SO/S2/GIO1/00_Projet/01_Code_GIT
+$ git clone git@github.com:sarah0fournier/projet-gio1.git
+
+# Aller dans le dossier créer par l'étape précédente
+nonog@LAPTOP-17HB5T3J MINGW64 ~/Documents/Lecon_HES-SO/S2/GIO1/00_Projet/01_Code_GIT
+$ cd projet-gio1/
+
+# Effectuer les changements désirés 
+
+#Ajouter les fichier dans la zone d'attente pour le prochain versionning
+nonog@LAPTOP-17HB5T3J MINGW64 ~/Documents/Lecon_HES-SO/S2/GIO1/00_Projet/01_Code_GIT/projet-gio1 (master)
+$ git add --all
+#ou 
+$ git add fichier_spécifique.txt
+
+# Versionner les fichiers en attente = on créer une nouvelle version
+nonog@LAPTOP-17HB5T3J MINGW64 ~/Documents/Lecon_HES-SO/S2/GIO1/00_Projet/01_Code_GIT/projet-gio1 (master)
+$ git commit -m "NOM NEW VERSION"
+
+# Mettre à jour le GITHUB selon les nouvellles versions que l'on a faites
+nonog@LAPTOP-17HB5T3J MINGW64 ~/Documents/Lecon_HES-SO/S2/GIO1/00_Projet/01_Code_GIT/projet-gio1 (master)
+$ git push
+
+
+
+##AUTRE ACTIONS :
+##---------------
+# Pour avoir dees infos interresantes sur qu'est-ce qui est ou 
+nonog@LAPTOP-17HB5T3J MINGW64 ~/Documents/Lecon_HES-SO/S2/GIO1/00_Projet/01_Code_GIT/projet-gio1 (master)
+$ git status
+
+# Pour créer un nouveau répertoire
+nonog@LAPTOP-17HB5T3J MINGW64 ~/Documents/Lecon_HES-SO/S2/GIO1/00_Projet/01_Code_GIT/projet-gio1 (master)
+$ mkdir NEW_DOSSIER
+
+# Pour renommer des fichiers 
+nonog@LAPTOP-17HB5T3J MINGW64 ~/Documents/Lecon_HES-SO/S2/GIO1/00_Projet/01_Code_GIT/projet-gio1 (master)
+$ mv OLD_NAME.txt NEW_NAME.txt
+
+# Pour montrer les différentes versions précédente (nom des versions)
+nonog@LAPTOP-17HB5T3J MINGW64 ~/Documents/Lecon_HES-SO/S2/GIO1/00_Projet/01_Code_GIT/projet-gio1 (master)
+$ git log --oneline --decorate --graph --all 
+
+# Pour faire un alias à une commande 
+nonog@LAPTOP-17HB5T3J MINGW64 ~/Documents/Lecon_HES-SO/S2/GIO1/00_Projet/01_Code_GIT/projet-gio1 (master)
+$ git config --global alias.graph "log --oneline --decorate --graph --all" 
+=> git config --global alias.NOM_ALIAS "COMMANDE A SIMPLIFIER" 
+
+# Pour créer une nouvelle branche 
+nonog@LAPTOP-17HB5T3J MINGW64 ~/Documents/Lecon_HES-SO/S2/GIO1/00_Projet/01_Code_GIT/projet-gio1 (master)
+$ git branch NEW_BRANCHE
+
+# Pour savoir sur quelle branche nous nous situons
+nonog@LAPTOP-17HB5T3J MINGW64 ~/Documents/Lecon_HES-SO/S2/GIO1/00_Projet/01_Code_GIT/projet-gio1 (master)
+$ git branch 
+
+# Pour changer de branche 
+nonog@LAPTOP-17HB5T3J MINGW64 ~/Documents/Lecon_HES-SO/S2/GIO1/00_Projet/01_Code_GIT/projet-gio1 (master)
+$ git checkout NOM_BRANCHE
+#ou 
+$ git checkout master
+
+# Pour merger une branche sur la branche master
+# D'abord se situer dans la brranche master 
+nonog@LAPTOP-17HB5T3J MINGW64 ~/Documents/Lecon_HES-SO/S2/GIO1/00_Projet/01_Code_GIT/projet-gio1 (master)
+$ git merge NEW_BRANCHE
+
+# Pour delete une branche 
+nonog@LAPTOP-17HB5T3J MINGW64 ~/Documents/Lecon_HES-SO/S2/GIO1/00_Projet/01_Code_GIT/projet-gio1 (master)
+$ git branch -d NEW_ANCIENNE
+
+# Pour générer une clé SSH pour se lier à son github
+# D'abord faire une github
+nonog@LAPTOP-17HB5T3J MINGW64 ~
+$ ssh-keygen
+# Faire enter jusqu'à ce qu'il dise plus rien 
+# aprèès ? pas tout compris
+
+# Pour observer les changements dans les fichiers git locaux déjà mis en attente de versionnage (déjà add)
+nonog@LAPTOP-17HB5T3J MINGW64 ~/Documents/Lecon_HES-SO/S2/GIO1/00_Projet/01_Code_GIT/projet-gio1 (master)
+$ git diff --staged
+# Pour voir ceux non-add
+$ git diff
+
+# Pour ajouter du texte à la fin d'un fichier 
+nonog@LAPTOP-17HB5T3J MINGW64 ~/Documents/Lecon_HES-SO/S2/GIO1/00_Projet/01_Code_GIT/projet-gio1 (master)
+$ echo "TEXTE A RAJOUTER" >> FICHIER.txt
+
+# Pour dire à git de ne pas prendre en compte les changements dans les fichiers
+# Créer .gitignore à la racine
+nonog@LAPTOP-17HB5T3J MINGW64 ~/Documents/Lecon_HES-SO/S2/GIO1/00_Projet/01_Code_GIT/projet-gio1 (master)
+$ mkdir .gitignore
+# puis déplacer dedans tous ce qu'on ne veut pas  
+$ mv FICHIER_ININTERRESSANT.txt .gitignore
+$ mv *.log .gitignore
+# Puis add (message d'erreur pas grave)
+$ git add .gitignore
+# Puis commit 
+$ git commit -m "IGNORE FILE"
+
+
+##ACTION DANS L'EDITEUR
+##---------------------
+# Sortir de l'éditeur :q!
+# Sauver et sortir de l'éditeur :wq
+
+
