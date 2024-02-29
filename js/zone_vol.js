@@ -29,6 +29,7 @@ draw.on('drawend', function(event) {
     // Appelez la fonction de rappel avec les données nécessaires
     // Seulment pour la couche restriction drone pour l'instant ? 
     url = BuildUrlApiGeoadmin("ch.bazl.einschraenkungen-drohnen", coordinates);
+    fetchDataFromURL(url)
 });
 
 
@@ -40,4 +41,25 @@ function BuildUrlApiGeoadmin(layer, polygonCoordinates) {
     // Voir si pour autre couches c'est la même url ?
     var url = "https://api3.geo.admin.ch/rest/services/api/MapServer/identify?geometryType=esriGeometryPolygon&geometry=" + encodeURIComponent(JSON.stringify({ "rings": polygonCoordinates })) + "&layers=all:" + encodeURIComponent(layer) + "&geometryFormat=geojson&sr=2056&tolerance=0";
     console.log("URL de la requête:", url);
+    return url;
+}
+
+function fetchDataFromURL(url) {
+    // Effectuez la requête HTTP
+    fetch(url)
+    .then(response => {
+        if (response.ok) {
+            return response.json(); // Si la réponse est OK, retournez les données JSON
+        } else {
+            throw new Error('Erreur lors de la requête');
+        }
+    })
+    .then(data => {
+        console.log('Données récupérées avec succès :', data); // Affichez les données récupérées dans la console
+        return data;
+    })
+    .catch(error => {
+        console.error('Erreur :', error); // Gérez les erreurs
+        return null;
+    });
 }
