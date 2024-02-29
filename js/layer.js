@@ -47,19 +47,4 @@ var map = new ol.Map ({
         });
 
 
-// // Créez une couche vectorielle pour stocker les traits dessinés
-// var vectorLayer = new ol.layer.Vector({
-//     source: new ol.source.Vector()
-// });
-// map.addLayer(vectorLayer);
-
-// // Interaction pour dessiner un trait
-// var draw = new ol.interaction.Draw({
-//     source: vectorLayer.getSource(), // Utilisez la couche vectorielle créée
-//     type: 'LineString' // Vous pouvez changer le type selon votre besoin
-// });
-// map.addInteraction(draw);
-
-
-// Source : http://turfjs.org/docs/#intersect
 
