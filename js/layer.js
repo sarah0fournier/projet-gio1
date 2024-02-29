@@ -25,7 +25,6 @@ const carteNationale = new ol.layer.Tile({
   opacity: 0.5
 });
 
-
   // Restriction drone a l echelle de la suisse
   const attributions_geodienste = new ol.layer.Tile({
     source: new ol.source.TileWMS({
