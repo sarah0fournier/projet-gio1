@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carte Suisse</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- OpenLayers CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.1.0/ol.css">
+
+    <!-- jQuery UI CSS -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <!-- CSS personnalisé -->
+    <link rel="stylesheet" href="./css/style.css" type="text/css">
+
+    <style>
+        /* CSS */
+        #scrollable-dropdown-menu .tt-dropdown-menu {
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        /* Ajout de la barre de défilement à la liste des suggestions */
+        .ui-autocomplete {
+            max-height: 200px;
+            overflow-y: auto;
+            /* Ajoutez ceci pour afficher la barre de défilement uniquement si nécessaire */
+            overflow-x: hidden;
+        }
+
+        .ui-menu-item {
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        .ui-menu-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .ui-state-focus {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Carte de la Suisse</h1>
+
+    <!-- Conteneur pour la carte -->
+    <div id="map"></div>
+
+    <!-- Bouton pour démarrer le dessin du polygone -->
+    <button id="startDrawingButton">Commencer le dessin du polygone</button>
+    <div id="search-control" style="position: absolute; top: 10px; left: 10px; z-index: 100;"></div>
+
+
+    <!-- Champ de saisie de recherche avec Typeahead -->
+    <div class="container">
+        <div id="scrollable-dropdown-menu">
+            <input id="searchInput" class="form-control" type="text" placeholder="Recherche une parcelle, adresse,...">
+        </div>
+    </div>
+
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script> -->
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- jQuery UI JavaScript -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    
+    <!-- OpenLayers JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/ol@v7.1.0/dist/ol.js"></script>
+
+    <!-- Script personnel -->
+    <script src="./js/layer.js"></script>
+    <script src="./js/coord.js"></script>
+    <script src="./js/zone_vol.js"></script>
+
+    <!-- Script pour faire la recherche de parcelle, coordonnee, ... -->
+    <!-- A deplacer dans un file .js -->
+    <script>
+        // Source :
+            // API3 + requete map.geo.admin.ch
+            // https://twitter.github.io/typeahead.js/examples/
+            
+        // Probleme : 
+            // PBL : Peut pas mettre des virgules dans import // Format ecriture texte dans liste
+            // PBL : Met numero parcelle puis commence a ecrire lettre commune il m affiche plus de liste deroulante -> on dirait aime pas les espaces
+
+
+
+        
+
+        // Selection du champ de recherche
+        const searchInput = $('#searchInput');
+
+        // Recuperer ce que utilisateur a saisie dans la ligne recherche
+        function recoveryData() {
+            // Récupérer la valeur du champ de recherche
+            var query = searchInput.val();
+            console.log("Data input search :", query);
+            
+            // Supprimer espace blanc inutile --> Inutile cette etape ? 
+            var formattedQuery = query.trim()
+            console.log("Data input search Format :", formattedQuery);
+
+            return formattedQuery
+        }
+
+        // Construire l'URL de requete vers le serveur API map geo admin
+        function locationApiGeoadmin(text) {
+            var url = 'https://api3.geo.admin.ch/rest/services/blw/SearchServer?sr=2056&searchText=' + text + '&lang=fr&type=locations';
+            console.log("URL de la requête:", url);
+            return url
+        }
+
+        // Envoyer la requête de l'URL
+        function fetchURL(url) {
+            return fetch(url)
+                .then(response => {
+                    if (response.ok) {
+                        // console.log("Requete URL send")
+                        return response.json(); // Si reponse est OK, retourner donnees JSON
+                    } else {
+                        throw new Error('Error lors de la requête');
+                    }
+                });
+        }
+
+        // Recuperer les donner recu depuis URL 
+        function receiveData(data) {
+            console.log('data ', data)
+
+            if (data.results.length !== 0){
+                // A un resultat dans results
+                displaySearchResults(data.results);
+            }
+            else{
+                // A pas de resultas dans results (eg on a fait une recherche par coordonnee)
+
+                // Recuperer la valeur de recherche
+                var text = recoveryData()
+                var part = parseCoordinates(text)
+
+                // Mettre a jour le marker / map
+                updateMap(markerSource, part[0].trim(), part[1].trim())
+            }
+        }
+
+        function parseCoordinates(text){
+            // Supprimer les apostrophe s'il y en a 
+            text = text.replace(/'/g, '');
+
+            // separer en deux variable est et nord
+            var part = text.split(',')
+            return part
+        }
+
+        // Envoyer la requête de l'URL et recevoir les données
+        function fetchDataFromURL(url) {
+            // Envoyer la requete
+            fetchURL(url)
+                // Recevoir data - reponse promise 
+                .then(receiveData)
+                .catch(error => {
+                    console.error('Error :', error);
+                });
+        }
+
+
+        // Afficher les resultats de la recherche
+        function displaySearchResults(results) {
+            // Convertir les resultats en un tableau               
+            var suggestions = results.map(result => ({
+                label: result.attrs.label,
+                // label: stripHtmlTags(result.attrs.label),
+                
+                x: result.attrs.x, // Nord MN95
+                y: result.attrs.y // Est MN95
+            }));
+            console.log("Objet select :", suggestions)
+
+            // Appliquer l'autocomplete au champ de recherche
+            searchInput.autocomplete({
+                source: suggestions,
+                select: function(event, ui) {
+                    // Element selectionner
+                    console.log("Resultat de la selection :", ui.item.label, ui.item.y , ui.item.x);
+
+                    // Mettre a jour la vue et coorddonner du marker sur notre recherche
+                    updateMap(markerSource, ui.item.y , ui.item.x)
+                }
+            });
+        }
+
+        // ---- A mettre dans layer.js ???
+            // Créer un vecteur de source de recherche
+            var markerSource = new ol.source.Vector({
+                extent: [232e4,93e4,30e5,145e4],
+            });
+            
+            // Créer une couche de vecteur pour afficher le marqueur
+            var markerLayer = new ol.layer.Vector({
+                source: markerSource,
+                style: new ol.style.Style({
+                    image: new ol.style.Icon({
+                        src: 'https://openlayers.org/en/latest/examples/data/icon.png' // URL de l'icône du marqueur
+                    }),
+                })
+            });
+
+            // Ajouter la couche de marqueur à la carte
+            map.addLayer(markerLayer);
+
+            function addMarker(x, y) {
+                var test = true
+                // Vérifier si les coordonnées sont à l'intérieur de l'étendue
+                if (x >= 232e4 && x <= 30e5 && y >= 93e4 && y <= 145e4) {
+                    return test
+                }
+            }
+
+            function updateMap(markerSource, est, nord){
+                var test = addMarker(est, nord)
+                if (test) {
+                    // Modifier le centre de la carte
+                    mapView.setCenter([est , nord])
+
+                    // Mettre a jour coorddonner du marker sur notre recherche
+                    markerReserach(markerSource, est, nord)
+                }
+            }
+
+            // Mettre a jour le marker
+            function markerReserach(markerSource, est, nord){
+                markerSource.clear()
+
+                // Créer un marqueur (point) avec la nouvelle position
+                var marker = new ol.Feature({
+                    geometry: new ol.geom.Point([est, nord])
+                });
+
+                // Ajouter le marqueur à la source du vecteur
+                markerSource.addFeature(marker);
+            }
+        // ---- Fin A mettre dans layer.js ???
+
+        // Retirer les balises HTML d'une chaîne de caractères
+        function stripHtmlTags(html) {
+            var temporalDivElement = document.createElement("div");
+            temporalDivElement.innerHTML = html;
+            return temporalDivElement.textContent || temporalDivElement.innerText || "";
+        }
+
+        // Declencher l'action de recherche
+        function launchSearch() {
+            // Récupérer la valeur du champ de recherche
+            var formattedQuery = recoveryData();
+
+            // Si la requête est vide, ne rien faire
+            if (formattedQuery === '') {
+                return;
+            }
+
+            // Construire l'URL avec la requête de recherche
+            var url = locationApiGeoadmin(formattedQuery);
+
+            // Envoyer url
+            fetchDataFromURL(url);
+        }
+
+
+        // Configurer Typeahead.js
+        $(document).ready(function () {
+            // Gestionnaire d'événement pour le changement de contenu dans le champ de recherche
+            // Lancer la recherche à chaque changement dans le champ de recherche
+            $('#searchInput').on('input', launchSearch);
+        });
+
+    </script>
+</body>
+
+</html>
