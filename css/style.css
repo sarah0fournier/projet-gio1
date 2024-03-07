@@ -1,4 +1,72 @@
+
 #map {
-    width: 100%;
-    height: 400px;
+    height: 100vh;
 }
+
+
+#menu {
+    height: 100vh;
+}
+
+
+/* ----- Bouton dessiner polygone */
+#drawSelection {
+    position: absolute;
+    right: 20px;
+    top: 50px;
+}
+
+#startDrawingButton {
+    /* background-color: #ffffff; */
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    padding: 5px;
+    height: 50px;
+    width: 50px;
+}
+
+#imgDraw {
+    width: 40px;
+    height: 40px;
+}
+
+
+/* Style pour l'icône d'information */
+.info-icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-image: url('https://image.flaticon.com/icons/png/128/565/565261.png');
+    background-size: cover;
+    cursor: pointer;
+}
+/* ----- End : Bouton dessiner polygone */
+
+/* ----- Bouton barre de recherche */
+#scrollable-dropdown-menu .tt-dropdown-menu {
+    max-height: 120px;
+    overflow-y: auto;
+}
+
+/* Ajout de la barre de défilement à la liste des suggestions */
+.ui-autocomplete {
+    max-height: 200px;
+    overflow-y: auto;
+    /* Ajoutez ceci pour afficher la barre de défilement uniquement si nécessaire */
+    overflow-x: hidden;
+}
+
+.ui-menu-item {
+    padding: 5px;
+    cursor: pointer;
+}
+
+.ui-menu-item:hover {
+    background-color: #f0f0f0;
+}
+
+.ui-state-focus {
+    background-color: #ddd;
+}
+/* ----- End : Bouton barre de recherche */

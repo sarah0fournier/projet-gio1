@@ -45,5 +45,3 @@ var map = new ol.Map ({
       layers: [carteNationale, attributions_geodienste],
         });
 
-
-

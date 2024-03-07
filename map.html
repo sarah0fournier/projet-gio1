@@ -1,36 +1,134 @@
 <!DOCTYPE html>
 <html lang="fr">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Carte Suisse</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carte Suisse</title>
 
-        <!-- OpenLayer -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.1.0/ol.css">
-        
-        <!-- Script personnel -->
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-        <link rel="stylesheet" href="./css/style.css" type="text/css">
-    </head>
+    <!-- OpenLayers CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.1.0/ol.css">
 
-    <body>
-        <h1>Carte de la Suisse</h1>
-        
-        <!-- Conteneur pour la carte -->
-        <div id="map"></div>
+    <!-- jQuery UI CSS -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <!-- CSS personnalisé -->
+    <link rel="stylesheet" href="./css/style.css" type="text/css">
+</head>
+
+<body>
+
+    <div class="container-fluid" id="mainContainer">
+
+        <div class="row align-items-start">
+
+            <!-- Left: menu and drop-down menu -->
+            <div class="col-3 border overflow-y-auto" id="menu">
+                
+                <!-- Logo -->
+                <div class="w3-center">
+                    <h1>Carte de la Suisse</h1>
+                    <!-- Possible de mettre un logo a la place -->
+                    <!-- <img src="img/logoAvecTitre2.png" class="imgLogo w3-center" alt="Logo de ??"> -->
+                </div>
+                <!-- End Logo -->
+
+                <!-- Champ de saisie de recherche avec Typeahead -->
+                <div class="mt-2 greyBackground border border-dark p-1">
+                    <div id="scrollable-dropdown-menu">
+                        <input id="searchInput" class="form-control" type="text" placeholder="Recherche une parcelle, adresse,...">
+                    </div>
+                </div>
+                <!-- End Champ de saisie de recherche -->
+
+                <!-- Formulaire -->
+                <div class="mt-2 greyBackground border border-dark p-1">
+                    <h3 class="mx-2">Formulaire</h3>
+                    <form class="mx-2 my-1 pr-2" id="myForm">
+                        
+                        <!-- Hauteur de vol -->
+                        <div style="display: flex; align-items: center;">
+                            <label for="heightMachine" style="display: inline-block;">Hauteur de vol (en mètres) : </label>
+                            <input type="text" id="heightMachine" name="heightMachine" required style="display: inline-block; width: 150px; margin-left: 5px;">
+                            
+                            <!-- Information supplementaire -->
+                            <!-- Pbl emplacement affichage info supplementaire -->
+                            <button id="myButton" onmouseover="showTooltip()" onmouseout="hideTooltip()" style="margin-left: 5px;">?</button>
+                            <div id="tooltip" style="display: none; position: absolute; z-index: 999; background-color: white;"> Hauteur relative la plus petite</div>
+                        </div><br>
+
+                        <!-- Poid du drone -->
+                        <label for="weightMachine" style="display: inline-block;">Poids du drone :</label>
+                        <select id="weightMachine" name="weightMachine">
+                            <option value="" disabled selected>Choisir une option</option>
+                            <option value="250_inf">Moins que 250 gramme </option>
+                            <option value="250_plus"> Plus que 250 gramme </option>
+                        </select><br><br>
+
+                        <!-- Bouton pour démarrer le dessin du polygone -->
+                        <label for="DrawingButton" style="display: inline-block;">Dessiner la zone de vol :</label>
+                        <button class="w3-button" id="startDrawingButton" onclick="startDrawingOnClickFormular(event, draw)">
+                            <img id="imgDraw" src="./img/pentagon-svgrepo-com.png" alt="Drawing a polygon">
+                        </button><br><br>
+
+                        <!-- Poissible ajouter autre elements -->
+
+
+                        <!-- Boutons -->
+                        <!-- <input type="submit" value="Soumettre"> -->
+                        <button type="button" onclick="validateForm()">Soumettre</button>
+
+                        <button type="button" onclick="resetForm()">Réinitialiser</button>
+                    </form>
+                </div>
+                <!-- End Formulaire -->
+
+            </div>
+            <!-- End Contenur menu -->
+
+
+            <!-- Right: Contenur map -->
+            <div class="col">
+                <div id="map">
+                    <div id="popup"></div>
+                </div>
+            </div>
+            <!-- End Contenur map -->
+
+        </div>
 
         <!-- Bouton pour démarrer le dessin du polygone -->
-        <button id="startDrawingButton">Commencer le dessin du polygone</button>
+        <!-- <div class="w3-dropdown-hover w3-right" id="drawSelection">
+            <button class="w3-button" id="startDrawingButton">
+                <img id="imgDraw" src="./img/pentagon-svgrepo-com.png" alt="Drawing a polygon">
+            </button>
+            <div id="search-control" style="position: absolute; top: 10px; left: 10px; z-index: 100;"></div>
+        </div> -->
+    </div>
 
-        <!-- Librairie : OpenLayers / ol-ext -->
-        <script src="https://cdn.jsdelivr.net/npm/ol@v7.1.0/dist/ol.js"></script>
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script> -->
 
-        <!-- Script personnel -->
-        <script src= "./js/layer.js"></script>
-        <script src= "./js/coord.js"></script>
-        <script src= "./js/zone_vol.js"></script>
-    </body>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- jQuery UI JavaScript -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    
+    <!-- OpenLayers JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/ol@v7.1.0/dist/ol.js"></script>
+
+    <!-- Script personnel -->
+    <script src="./js/layer.js"></script>
+    <script src="./js/coord.js"></script>
+    <script src="./js/zone_vol.js"></script>
+    <script src="./js/formulaire.js"></script>
+    <script src="./js/searchLocation.js"></script>
+    
+  
+</body>
 
 </html>
-

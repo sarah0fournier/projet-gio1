@@ -31,6 +31,19 @@ function createDrawInteraction(vectorLayer) {
     return draw;
 }
 
+// -------------------------------------------
+// Du ajouter cette fonction 
+// Car si non dans mon formulaire quand je cliquer sur icone pour dessiner il me fesait la verification du formulaire
+function startDrawingOnClickFormular(event, draw) {
+    // Empêcher le comportement par défaut du bouton
+    event.preventDefault();
+
+    // Appeler la fonction pour dessiner la zone de vol
+    startDrawingOnClick(draw);
+} 
+// -------------------------------------------
+
+
 // Fonction pour activer l'interaction de dessin lorsque l'utilisateur clique sur le bouton
 function startDrawingOnClick(draw) {
     var startDrawingButton = document.getElementById('startDrawingButton');
