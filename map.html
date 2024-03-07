@@ -96,7 +96,7 @@
                         <option value="none">Aucun</option>
                     </select>
 
-                    <div style="display: flex; align-items: center;"></div>
+                    <div style="align-items: center;">
                         <!-- Couches à cocher -->
                         <input type="checkbox" id="restrictionsCheckbox" checked>
                         <label for="restrictionsCheckbox">Restrictions pour drônes CH</label><br>
@@ -126,6 +126,23 @@
             </button>
             <div id="search-control" style="position: absolute; top: 10px; left: 10px; z-index: 100;"></div>
         </div> -->
+
+        <!-- Adapter code ci dessous pour faire un icone pour changement Layer -->
+        <div class="w3-dropdown-hover w3-right" id="changeMapSelection">
+            <button class="w3-button" id="changeMapSButton">
+                <img src="./img/map_fond_carte.svg" alt="layers" class="imgLchangeMap" width="50" />
+            </button>
+            <!-- <div class="w3-dropdown-content w3-bar-block w3-border" style="right:0"> -->
+                <!-- Liste déroulante de fond de carte -->
+                <!-- <select id="selectBackground">
+                    <option value="nationalMapCH" class="w3-bar-item w3-button">Carte nationale</option>
+                    <option value="swissImage" class="w3-bar-item w3-button">SwissImage</option>
+                    <option value="swissSurface3D" class="w3-bar-item w3-button">SwissSURFACE3D</option>
+                    <option value="MO_nb" class="w3-bar-item w3-button">MO noir et blanc</option>
+                    <option value="none" class="w3-bar-item w3-button">Aucun</option>
+                </select>
+            </div> -->
+            </div>
     </div>
 
     <!-- Bootstrap JavaScript -->
