@@ -4,3 +4,6 @@ const mousePositionControl = new ol.control.MousePosition({
     coordinateFormat: ol.coordinate.createStringXY(2)
   });
 map.addControl(mousePositionControl);
+
+
+

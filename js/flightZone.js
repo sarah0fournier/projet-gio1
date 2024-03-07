@@ -97,6 +97,7 @@ function fetchDataFromURL(url) {
         .then(data => {
             // Appel de la fonction pour afficher les données des zones de vol restreintes
             displayZoneRestrictionData(data.results);
+            //console.log(data);
         })
         .catch(error => {
             console.error('Erreur :', error);
@@ -104,6 +105,7 @@ function fetchDataFromURL(url) {
 }
 
 //--------------- SUREMENT D'AUTRE ZONE A DRY OU AUTRE AFFICHAGE  ----------------- 
+// Fonction pour afficher les données des zones de vol de restriction
 // Fonction pour afficher les données des zones de vol de restriction
 function displayZoneRestrictionData(results) {
     // Variable pour stocker les données des zones de vol restreintes
@@ -126,10 +128,10 @@ function displayZoneRestrictionData(results) {
 
         // Ajout de l'objet au tableau
         zonesData.push(zoneData);
-
-        // Affichage du tableau dans la console ou autre traitement que vous souhaitez faire avec les données
-        console.log(zonesData);
-        // Faudra les afficher qqpart d'autre 
     });
+
+    // Affichage du tableau dans la console ou autre traitement que vous souhaitez faire avec les données
+    console.log(zonesData);
+    // Faudra les afficher qqpart d'autre 
 }
 

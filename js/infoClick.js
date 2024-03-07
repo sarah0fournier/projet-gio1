@@ -3,37 +3,23 @@ map.on('click', function(event) {
     // Récupérer les coordonnées du clic
     var coordinate = event.coordinate;
 
-    // Définir les paramètres de la requête GetFeatureInfo
-    var getFeatureInfoParams = {
-        'INFO_FORMAT': 'text/plain', // Format de réponse souhaité
-        'FEATURE_COUNT': 1, // Nombre de features à retourner
-        'X': Math.round(event.pixel[0]), // Position X du clic
-        'Y': Math.round(event.pixel[1]), // Position Y du clic
-        'QUERY_LAYERS': 'ch.bazl.einschraenkungen-drohnen', // Couche à interroger
-        'LAYERS': 'ch.bazl.einschraenkungen-drohnen', // Couche à interroger
-        'WIDTH': map.getSize()[0], // Largeur du conteneur de la carte
-        'HEIGHT': map.getSize()[1], // Hauteur du conteneur de la carte
-        'BBOX': map.getView().calculateExtent(map.getSize()) // Boîte englobante de la vue actuelle
-    };
+   // Calculer les coordonnées des coins du rectangle
+var topLeft = [coordinate[0] - 2.5, coordinate[1] + 2.5];
+var topRight = [coordinate[0] + 2.5, coordinate[1] + 2.5];
+var bottomRight = [coordinate[0] + 2.5, coordinate[1] - 2.5];
+var bottomLeft = [coordinate[0] - 2.5, coordinate[1] - 2.5];
 
-    // Envoyer une requête GetFeatureInfo au serveur WMS
-    map.forEachLayerAtPixel(event.pixel, function(layer) {
-        if (layer instanceof ol.layer.Tile) {
-            var url = layer.getSource().getFeatureInfoUrl(
-                coordinate, map.getView().getResolution(), map.getView().getProjection(),
-                getFeatureInfoParams
-            );
+// Formater les coordonnées pour la requête
+var rectangleCoordinates = [
+    [topLeft, topRight, bottomRight, bottomLeft, topLeft] // Premier anneau du polygone
+];
 
-            if (url) {
-                // Effectuer une requête Ajax pour récupérer les informations
-                fetch(url)
-                    .then(function(response) {
-                        return response.text();
-                    })
-                    .then(function(text) {
-                        console.log('Informations sur la couche de restriction:', text);
-                    });
-            }
-        }
-    });
+    console.log('Coordonnées du rectangle :', rectangleCoordinates);
+   
+   
+    var url = BuildUrlApiGeoadmin("ch.bazl.einschraenkungen-drohnen", rectangleCoordinates);
+    
+    // Appeler la fonction pour récupérer les données à partir de l'URL
+    fetchDataFromURL(url);
 });
+  
