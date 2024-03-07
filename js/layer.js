@@ -125,3 +125,4 @@ function addLayerVisibilityChangeListener(layer, checkboxElement) {
 // Gestionnaire de changement de couche 
 addLayerVisibilityChangeListener(Restrictions_CH, document.getElementById('restrictionsCheckbox'));
 addLayerVisibilityChangeListener(obstaclesNavigation, document.getElementById('obstaclesCheckbox'));
+
