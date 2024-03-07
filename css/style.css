@@ -31,6 +31,7 @@
     height: 40px;
 }
 
+/* ----- End : Bouton dessiner polygone */
 
 /* Style pour l'icône d'information */
 .info-icon {
@@ -41,7 +42,6 @@
     background-size: cover;
     cursor: pointer;
 }
-/* ----- End : Bouton dessiner polygone */
 
 /* ----- Bouton barre de recherche */
 #scrollable-dropdown-menu .tt-dropdown-menu {
@@ -70,3 +70,27 @@
     background-color: #ddd;
 }
 /* ----- End : Bouton barre de recherche */
+
+/* ----- Bouton changement layer */
+#changeMapSelection {
+    position: absolute;
+    right: 20px;
+    top: 50px;
+}
+
+#changeMapButton {
+    /* background-color: #ffffff; */
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    padding: 5px;
+    height: 50px;
+    width: 50px;
+}
+
+#imgchangeMap {
+    width: 40px;
+    height: 40px;
+}
+
+/* ----- End : Bouton dessiner polygone */
