@@ -74,7 +74,7 @@
                             <img id="imgDraw" src="./img/pentagon-svgrepo-com.png" alt="Drawing a polygon">
                         </button><br><br>
 
-                        <!-- Poissible ajouter autre elements -->
+                        <!-- Possible ajouter autre elements -->
 
 
                         <!-- Boutons -->
@@ -85,10 +85,29 @@
                     </form>
                 </div>
                 <!-- End Formulaire -->
+                
+                <div class="mt-2 greyBackground border border-dark p-1"> 
+                    <!-- Liste déroulante de fond de carte -->
+                    <select id="selectBackground">
+                        <option value="nationalMapCH">Carte nationale</option>
+                        <option value="swissImage">SwissImage</option>
+                        <option value="swissSurface3D">SwissSURFACE3D</option>
+                        <option value="MO_nb">MO noir et blanc</option>
+                        <option value="none">Aucun</option>
+                    </select>
 
+                    <div style="display: flex; align-items: center;"></div>
+                        <!-- Couches à cocher -->
+                        <input type="checkbox" id="restrictionsCheckbox" checked>
+                        <label for="restrictionsCheckbox">Restrictions pour drônes CH</label><br>
+    
+                        <input type="checkbox" id="obstaclesCheckbox" checked>
+                        <label for="obstaclesCheckbox">Obstacles à la navigation aérienne</label>
+                    </div>   
+                    <!-- End Conteneur layers -->
+                </div>
+            <!-- End Conteneur menu -->
             </div>
-            <!-- End Contenur menu -->
-
 
             <!-- Right: Contenur map -->
             <div class="col">
